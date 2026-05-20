@@ -253,3 +253,7 @@ application-local.yml
 
 ### Claude Code ###
 .claude
+
+# IntelliJ - ignore all IDE project files
+**/.idea/
+*.iml

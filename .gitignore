@@ -250,3 +250,6 @@ gradle-app.setting
 ### Env ###
 .env
 application-local.yml
+
+### Claude Code ###
+.claude

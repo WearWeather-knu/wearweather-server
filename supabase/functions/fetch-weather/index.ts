@@ -55,7 +55,23 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error }), { status: 500 });
     }
 
-    return new Response(JSON.stringify({ success: true }), { status: 200 });
+    const weatherData = {
+      location_name,
+      base_date: new Date().toISOString().split("T")[0],
+      current_temp: weather.main.temp,
+      temp_min: weather.main.temp_min,
+      temp_max: weather.main.temp_max,
+      feels_like: weather.main.feels_like,
+      humidity: weather.main.humidity,
+      wind_speed: weather.wind.speed,
+      precipitation: weather.rain?.["1h"] ?? 0,
+      sky_status: weather.weather[0].description,
+      pm10: Math.round(air.list[0].components.pm10),
+      pm25: Math.round(air.list[0].components.pm2_5),
+      uv_index: uv.result?.uv ?? null,
+    };
+
+    return new Response(JSON.stringify({ success: true, data: weatherData }), { status: 200 });
   } catch (e) {
     console.log("예외 발생:", e.message);
     return new Response(JSON.stringify({ error: e.message }), { status: 500 });

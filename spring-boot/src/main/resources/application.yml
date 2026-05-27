@@ -18,8 +18,20 @@ spring:
         format_sql: true
 
 supabase:
-  jwt-secret: ${SUPABASE_JWT_SECRET:}
+  url: ${SUPABASE_URL:}
+
+gemini:
+  api-key: ${GEMINI_API_KEY:}
+  model: ${GEMINI_MODEL:gemini-3.5-flash}
 
 app:
   cors:
     allowed-origin-patterns: ${CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173}
+
+logging:
+  level:
+    wearweather.wearweather_server.application.auth: DEBUG
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html

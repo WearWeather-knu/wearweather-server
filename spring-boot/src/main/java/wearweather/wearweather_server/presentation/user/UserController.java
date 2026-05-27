@@ -3,7 +3,7 @@ package wearweather.wearweather_server.presentation.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +30,7 @@ public class UserController {
         return UserResponse.from(userService.getMe(authenticatedUser));
     }
 
-    @PatchMapping("/me")
+    @PutMapping("/me")
     public UserResponse updateMe(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader,
             @RequestBody UpdateUserRequest request

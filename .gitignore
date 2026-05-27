@@ -251,5 +251,8 @@ gradle-app.setting
 .env
 application-local.yml
 
+### Supabase ###
+supabase/.temp/
+
 ### Claude Code ###
 .claude

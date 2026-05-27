@@ -36,13 +36,13 @@ Deno.serve(async (req) => {
     const air = await airRes.json();
     console.log("대기질 응답:", JSON.stringify(air));
 
-    // UV 지수 (임시 비활성화 - 쿼터 초과 여부 테스트)
-    // const uvRes = await fetch(
-    //   `https://api.openuv.io/api/v1/uv?lat=${lat}&lng=${lon}`,
-    //   { headers: { "x-access-token": OPENUV_API_KEY } }
-    // );
-    // const uv = await uvRes.json();
-    // console.log("UV 응답:", JSON.stringify(uv));
+    // UV 지수
+    const uvRes = await fetch(
+      `https://api.openuv.io/api/v1/uv?lat=${lat}&lng=${lon}`,
+      { headers: { "x-access-token": OPENUV_API_KEY } }
+    );
+    const uv = await uvRes.json();
+    console.log("UV 응답:", JSON.stringify(uv));
 
     const { error } = await supabase.from("weather_logs").insert({
       location_name,
@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
       sky_status: weather.weather[0].description,
       pm10: Math.round(air.list[0].components.pm10),
       pm25: Math.round(air.list[0].components.pm2_5),
-      uv_index: null, // 임시 비활성화
+      uv_index: uv.result?.uv ?? null,
     });
 
     if (error) {
@@ -78,7 +78,7 @@ Deno.serve(async (req) => {
       sky_status: weather.weather[0].description,
       pm10: Math.round(air.list[0].components.pm10),
       pm25: Math.round(air.list[0].components.pm2_5),
-      uv_index: null, // 임시 비활성화
+      uv_index: uv.result?.uv ?? null,
     };
 
     return new Response(JSON.stringify({ success: true, data: weatherData }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });

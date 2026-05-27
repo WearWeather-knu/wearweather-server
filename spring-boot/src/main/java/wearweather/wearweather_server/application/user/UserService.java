@@ -1,6 +1,7 @@
 package wearweather.wearweather_server.application.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wearweather.wearweather_server.application.auth.AuthenticatedUser;
@@ -30,9 +31,16 @@ public class UserService {
 
     private User findOrCreateUser(AuthenticatedUser authenticatedUser) {
         return userJpaRepository.findById(authenticatedUser.id())
-                .orElseGet(() -> userJpaRepository.save(new User(
-                        authenticatedUser.id(),
-                        authenticatedUser.email()
-                )));
+                .orElseGet(() -> {
+                    try {
+                        return userJpaRepository.saveAndFlush(new User(
+                                authenticatedUser.id(),
+                                authenticatedUser.email()
+                        ));
+                    } catch (DataIntegrityViolationException e) {
+                        return userJpaRepository.findById(authenticatedUser.id())
+                                .orElseThrow(() -> e);
+                    }
+                });
     }
 }

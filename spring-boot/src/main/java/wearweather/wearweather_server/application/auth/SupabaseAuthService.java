@@ -31,17 +31,22 @@ public class SupabaseAuthService {
         if (subject == null || subject.isBlank()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 인증 토큰입니다.");
         }
+        String email = claims.get("email", String.class);
+        if (email == null || email.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "유효하지 않은 인증 토큰입니다.");
+        }
 
         return new AuthenticatedUser(
                 parseUserId(subject),
-                claims.get("email", String.class)
+                email
         );
     }
 
     private String extractAccessToken(String authorizationHeader) {
-        if (authorizationHeader == null || !authorizationHeader.startsWith(BEARER_PREFIX)) {
+        if (authorizationHeader == null || !authorizationHeader.regionMatches(true, 0, BEARER_PREFIX, 0, BEARER_PREFIX.length())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "인증 토큰이 필요합니다.");
         }
+
 
         return authorizationHeader.substring(BEARER_PREFIX.length());
     }

@@ -5,7 +5,17 @@ const OPENUV_API_KEY = Deno.env.get("OPENUV_API_KEY")!;
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, content-type',
+};
+
 Deno.serve(async (req) => {
+  // OPTIONS 프리플라이트 처리
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
+  }
+
   try {
     const { lat, lon, location_name } = await req.json();
     console.log("요청 받음:", { lat, lon, location_name });
@@ -52,7 +62,7 @@ Deno.serve(async (req) => {
 
     if (error) {
       console.log("DB 저장 에러:", JSON.stringify(error));
-      return new Response(JSON.stringify({ error }), { status: 500 });
+      return new Response(JSON.stringify({ error }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     const weatherData = {
@@ -71,9 +81,9 @@ Deno.serve(async (req) => {
       uv_index: uv.result?.uv ?? null,
     };
 
-    return new Response(JSON.stringify({ success: true, data: weatherData }), { status: 200 });
+    return new Response(JSON.stringify({ success: true, data: weatherData }), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   } catch (e) {
     console.log("예외 발생:", e.message);
-    return new Response(JSON.stringify({ error: e.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
   }
 });

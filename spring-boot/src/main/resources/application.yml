@@ -4,16 +4,18 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${DB_URL:jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:5432/postgres}
-    username: ${DB_USERNAME:postgres.ijxtsqdneuqqtintdsyb}
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      # ?? ???? update? ???, ??? ??? ??? none?? validate? ??? ?? ?????.
       ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
+supabase:
+  jwt-secret: ${SUPABASE_JWT_SECRET:}

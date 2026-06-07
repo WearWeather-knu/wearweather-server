@@ -41,6 +41,9 @@ public class User {
 
     public void updateProfile(String nickname, Integer age) {
         if (nickname != null && !nickname.isBlank()) {
+            if (nickname.length() > 30) {
+                throw new IllegalArgumentException("Nickname cannot exceed 30 characters");
+            }
             this.nickname = nickname;
         }
         this.age = age;

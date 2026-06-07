@@ -36,10 +36,23 @@ public class User {
     public User(UUID id, String email) {
         this.id = id;
         this.email = email;
+        this.nickname = defaultNickname(email);
     }
 
     public void updateProfile(String nickname, Integer age) {
-        this.nickname = nickname;
+        if (nickname != null && !nickname.isBlank()) {
+            this.nickname = nickname;
+        }
         this.age = age;
+    }
+
+    private String defaultNickname(String email) {
+        if (email == null || email.isBlank()) {
+            return "user";
+        }
+
+        String localPart = email.split("@", 2)[0];
+        String nickname = localPart.isBlank() ? "user" : localPart;
+        return nickname.length() > 30 ? nickname.substring(0, 30) : nickname;
     }
 }

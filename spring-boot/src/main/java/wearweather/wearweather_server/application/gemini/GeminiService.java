@@ -3,6 +3,8 @@ package wearweather.wearweather_server.application.gemini;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 @Service
 public class GeminiService {
 
+    private static final Logger log = LoggerFactory.getLogger(GeminiService.class);
+
     private final RestClient restClient;
     private final String apiKey;
     private final String model;
@@ -28,7 +32,7 @@ public class GeminiService {
 
     public GeminiService(
             @Value("${gemini.api-key:}") String apiKey,
-            @Value("${gemini.model:gemini-3.5-flash}") String model,
+            @Value("${gemini.model:gemini-2.5-flash}") String model,
             @Value("${gemini.image-model:gemini-2.5-flash-image}") String imageModel
     ) {
         this.restClient = RestClient.builder()
@@ -61,6 +65,8 @@ public class GeminiService {
                     .retrieve()
                     .body(GeminiResponse.class);
         } catch (RestClientResponseException exception) {
+            log.error("Gemini text generation failed: model={}, status={}, response={}",
+                    model, exception.getStatusCode(), exception.getResponseBodyAsString());
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Gemini API 호출에 실패했습니다.", exception);
         }
 
@@ -97,6 +103,8 @@ public class GeminiService {
                     .retrieve()
                     .body(GeminiResponse.class);
         } catch (RestClientResponseException exception) {
+            log.error("Gemini image generation failed: model={}, status={}, response={}",
+                    imageModel, exception.getStatusCode(), exception.getResponseBodyAsString());
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Gemini 이미지 생성 API 호출에 실패했습니다.", exception);
         }
 

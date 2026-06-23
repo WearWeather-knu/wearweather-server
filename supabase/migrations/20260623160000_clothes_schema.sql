@@ -96,6 +96,34 @@ create table if not exists public.clothes_bags (
     constraint clothes_bags_clothes_id_fkey foreign key (clothes_id) references public.clothes(id)
 );
 
+create table if not exists public.users (
+    id                 uuid                     not null,
+    email              character varying(100)   not null,
+    nickname           character varying(30)    not null,
+    gender             character varying(20)    null,
+    age                integer                  null,
+    sensitivity_offset real                     null default 0.0,
+    created_at         timestamp with time zone null default now(),
+    style_preference   character varying(20)    null,
+    constraint users_pkey primary key (id),
+    constraint users_email_key unique (email),
+    constraint users_id_fkey foreign key (id) references auth.users(id) on delete cascade,
+    constraint users_age_check check ((age > 0) and (age < 150)),
+    constraint users_gender_check check (
+        (gender)::text = any (array['MALE'::character varying, 'FEMALE'::character varying]::text[])
+    ),
+    constraint users_style_preference_check check (
+        (style_preference)::text = any (
+            array[
+                'CASUAL'::character varying, 'SPORTY'::character varying, 'FORMAL'::character varying,
+                'STREET'::character varying, 'VINTAGE'::character varying, 'MINIMAL'::character varying,
+                'OUTDOOR'::character varying, 'PREPPY'::character varying, 'BOHEMIAN'::character varying,
+                'CLASSIC'::character varying, 'ROMANTIC'::character varying, 'WORKWEAR'::character varying
+            ]::text[]
+        )
+    )
+);
+
 create table if not exists public.user_clothes (
     user_id    uuid   not null,
     clothes_id bigint not null,

@@ -25,7 +25,7 @@ public class UserService {
     @Transactional
     public UserResult updateMe(AuthenticatedUser authenticatedUser, UpdateUserCommand command) {
         User user = findOrCreateUser(authenticatedUser);
-        user.updateProfile(command.nickname(), command.age());
+        user.updateProfile(command.nickname(), command.age(), command.gender(), command.sensitivityOffset(), command.stylePreference());
         return UserResult.from(user);
     }
 

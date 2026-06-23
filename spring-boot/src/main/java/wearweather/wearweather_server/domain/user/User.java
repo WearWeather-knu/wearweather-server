@@ -33,13 +33,20 @@ public class User {
     @Column(length = 20)
     private Gender gender;
 
+    @Column(name = "sensitivity_offset")
+    private Float sensitivityOffset = 0.0f;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "style_preference", length = 20)
+    private StylePreference stylePreference;
+
     public User(UUID id, String email) {
         this.id = id;
         this.email = email;
         this.nickname = defaultNickname(email);
     }
 
-    public void updateProfile(String nickname, Integer age) {
+    public void updateProfile(String nickname, Integer age, Gender gender, Float sensitivityOffset, StylePreference stylePreference) {
         if (nickname != null && !nickname.isBlank()) {
             if (nickname.length() > 30) {
                 throw new IllegalArgumentException("Nickname cannot exceed 30 characters");
@@ -47,6 +54,15 @@ public class User {
             this.nickname = nickname;
         }
         this.age = age;
+        if (gender != null) {
+            this.gender = gender;
+        }
+        if (sensitivityOffset != null) {
+            this.sensitivityOffset = sensitivityOffset;
+        }
+        if (stylePreference != null) {
+            this.stylePreference = stylePreference;
+        }
     }
 
     private String defaultNickname(String email) {

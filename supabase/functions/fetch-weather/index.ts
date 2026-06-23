@@ -22,6 +22,25 @@ Deno.serve(async (req) => {
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
+    // 최근 1시간 내 같은 위치 데이터 있으면 재사용
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+    const { data: recent } = await supabase
+      .from("weather_logs")
+      .select("*")
+      .eq("location_name", location_name)
+      .gte("fetched_at", oneHourAgo)
+      .order("fetched_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (recent) {
+      console.log("캐시 데이터 반환:", location_name);
+      return new Response(JSON.stringify({ success: true, data: recent }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     // 현재 날씨
     const weatherRes = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${OPENWEATHER_API_KEY}&units=metric`

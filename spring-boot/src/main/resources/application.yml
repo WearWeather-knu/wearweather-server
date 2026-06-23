@@ -19,6 +19,9 @@ spring:
 
 supabase:
   url: ${SUPABASE_URL:}
+  service-role-key: ${SUPABASE_SERVICE_ROLE_KEY:}
+  storage:
+    clothes-bucket: ${SUPABASE_CLOTHES_BUCKET:clothes-images}
 
 gemini:
   api-key: ${GEMINI_API_KEY:}
@@ -26,6 +29,13 @@ gemini:
   image-model: ${GEMINI_IMAGE_MODEL:gemini-2.5-flash-image}
 
 app:
+  clothes-import:
+    token-secret: ${CLOTHES_IMPORT_TOKEN_SECRET:}
+    token-ttl-seconds: ${CLOTHES_IMPORT_TOKEN_TTL_SECONDS:900}
+    connect-timeout-seconds: ${CLOTHES_IMPORT_CONNECT_TIMEOUT_SECONDS:3}
+    request-timeout-seconds: ${CLOTHES_IMPORT_REQUEST_TIMEOUT_SECONDS:8}
+    max-html-bytes: ${CLOTHES_IMPORT_MAX_HTML_BYTES:2097152}
+    max-image-bytes: ${CLOTHES_IMPORT_MAX_IMAGE_BYTES:5242880}
   cors:
     allowed-origin-patterns: ${CORS_ALLOWED_ORIGIN_PATTERNS:http://localhost:3000,http://localhost:5173,http://127.0.0.1:3000,http://127.0.0.1:5173}
 

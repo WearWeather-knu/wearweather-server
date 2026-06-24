@@ -25,14 +25,27 @@ class ClothesDraftValidatorTests {
     }
 
     @Test
-    void rejectsInvalidTemperatureAndRequiredFields() {
+    void acceptsNullForEveryDetailFieldAndCategory() {
+        ClothesDetailsPayload details = new ClothesDetailsPayload(null, null, null, null, null,
+                null, null, null, null, null);
+
+        for (ClothesCategory category : ClothesCategory.values()) {
+            assertThat(validator.validateAndNormalize(request(category, 10f, 30f, details)))
+                    .isEqualTo(details);
+        }
+    }
+
+    @Test
+    void rejectsInvalidTemperatureAndUnsupportedDetailValues() {
         ClothesDetailsPayload details = new ClothesDetailsPayload(null, null, null, null, null,
                 null, null, null, null, null);
 
         assertThatThrownBy(() -> validator.validateAndNormalize(request(ClothesCategory.TOP, 30f, 10f, details)))
                 .isInstanceOf(ClothesImportException.class)
                 .hasMessageContaining("온도");
-        assertThatThrownBy(() -> validator.validateAndNormalize(request(ClothesCategory.TOP, 10f, 30f, details)))
+        ClothesDetailsPayload unsupported = new ClothesDetailsPayload(null, "invalid", null, null, null,
+                null, null, null, null, null);
+        assertThatThrownBy(() -> validator.validateAndNormalize(request(ClothesCategory.TOP, 10f, 30f, unsupported)))
                 .isInstanceOf(ClothesImportException.class)
                 .hasMessageContaining("thickness");
     }

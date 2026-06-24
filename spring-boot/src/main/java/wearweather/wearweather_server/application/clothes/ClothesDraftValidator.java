@@ -28,39 +28,40 @@ public class ClothesDraftValidator {
         ClothesDetailsPayload value = normalize(request.details());
         switch (request.category()) {
             case TOP -> {
-                requiredEnum(value.thickness(), Thickness.class, "thickness");
+                optionalEnum(value.thickness(), Thickness.class, "thickness");
                 optionalEnum(value.sleeveLength(), SleeveLength.class, "sleeveLength");
                 optionalEnum(value.fit(), ClothesFit.class, "fit");
-                requiredSet(value.material(), MATERIALS, "material");
-                requiredSet(value.color(), COLORS, "color");
+                optionalSet(value.material(), MATERIALS, "material");
+                optionalSet(value.color(), COLORS, "color");
             }
             case OUTER -> {
-                requiredEnum(value.thickness(), Thickness.class, "thickness");
+                optionalEnum(value.thickness(), Thickness.class, "thickness");
                 optionalEnum(value.fit(), ClothesFit.class, "fit");
-                requiredSet(value.material(), MATERIALS, "material");
-                requiredSet(value.color(), COLORS, "color");
+                optionalSet(value.material(), MATERIALS, "material");
+                optionalSet(value.color(), COLORS, "color");
             }
             case BOTTOM -> {
                 optionalEnum(value.length(), BottomLength.class, "length");
                 optionalEnum(value.fit(), ClothesFit.class, "fit");
-                requiredSet(value.material(), MATERIALS, "material");
-                requiredSet(value.color(), COLORS, "color");
+                optionalSet(value.material(), MATERIALS, "material");
+                optionalSet(value.color(), COLORS, "color");
             }
             case ACC -> {
-                requiredSet(value.type(), ACC_TYPES, "type");
+                optionalSet(value.type(), ACC_TYPES, "type");
                 optionalSet(value.color(), COLORS, "color");
-                int warmth = value.warmthBonus() == null ? 0 : value.warmthBonus();
-                if (warmth < 0 || warmth > 3) invalid("warmthBonus는 0~3이어야 합니다.");
+                if (value.warmthBonus() != null && (value.warmthBonus() < 0 || value.warmthBonus() > 3)) {
+                    invalid("warmthBonus는 0~3이어야 합니다.");
+                }
             }
             case SHOES -> {
-                requiredSet(value.type(), SHOE_TYPES, "type");
+                optionalSet(value.type(), SHOE_TYPES, "type");
                 optionalSet(value.material(), MATERIALS, "material");
-                requiredSet(value.color(), COLORS, "color");
+                optionalSet(value.color(), COLORS, "color");
             }
             case BAG -> {
-                requiredSet(value.type(), BAG_TYPES, "type");
+                optionalSet(value.type(), BAG_TYPES, "type");
                 optionalSet(value.material(), MATERIALS, "material");
-                requiredSet(value.color(), COLORS, "color");
+                optionalSet(value.color(), COLORS, "color");
             }
         }
         return value;
@@ -81,11 +82,6 @@ public class ClothesDraftValidator {
         }
     }
 
-    private <E extends Enum<E>> void requiredEnum(String value, Class<E> type, String field) {
-        if (value == null) invalid(field + " 값이 필요합니다.");
-        optionalEnum(value, type, field);
-    }
-
     private <E extends Enum<E>> void optionalEnum(String value, Class<E> type, String field) {
         if (value == null) return;
         try {
@@ -93,11 +89,6 @@ public class ClothesDraftValidator {
         } catch (IllegalArgumentException exception) {
             invalid(field + " 값이 지원 목록에 없습니다.");
         }
-    }
-
-    private void requiredSet(String value, Set<String> allowed, String field) {
-        if (value == null) invalid(field + " 값이 필요합니다.");
-        optionalSet(value, allowed, field);
     }
 
     private void optionalSet(String value, Set<String> allowed, String field) {

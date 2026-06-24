@@ -32,17 +32,17 @@ public class ClothesTop {
     private SleeveLength sleeveLength;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
+    @Column(length = 20)
     private Thickness thickness;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private ClothesFit fit;
 
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String material;
 
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     private String color;
 
     public ClothesTop(Clothes clothes, SleeveLength sleeveLength, Thickness thickness,

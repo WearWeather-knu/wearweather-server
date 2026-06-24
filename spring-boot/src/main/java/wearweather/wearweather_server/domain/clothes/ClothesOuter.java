@@ -20,12 +20,12 @@ import lombok.NoArgsConstructor;
 public class ClothesOuter {
     @Id @Column(name = "clothes_id") private Long clothesId;
     @MapsId @OneToOne @JoinColumn(name = "clothes_id") private Clothes clothes;
-    @Enumerated(EnumType.STRING) @Column(nullable = false, length = 20) private Thickness thickness;
+    @Enumerated(EnumType.STRING) @Column(length = 20) private Thickness thickness;
     @Enumerated(EnumType.STRING) @Column(length = 20) private ClothesFit fit;
     @Column(name = "is_windproof") private Boolean windproof;
     @Column(name = "is_waterproof") private Boolean waterproof;
-    @Column(nullable = false, length = 50) private String material;
-    @Column(nullable = false, length = 30) private String color;
+    @Column(length = 50) private String material;
+    @Column(length = 30) private String color;
 
     public ClothesOuter(Clothes clothes, Thickness thickness, ClothesFit fit, Boolean windproof,
                         Boolean waterproof, String material, String color) {

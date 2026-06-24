@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 public class ClothesAccessory {
     @Id @Column(name = "clothes_id") private Long clothesId;
     @MapsId @OneToOne @JoinColumn(name = "clothes_id") private Clothes clothes;
-    @Column(nullable = false, length = 30) private String type;
+    @Column(length = 30) private String type;
     @Column(name = "warmth_bonus") private Integer warmthBonus;
     @Column(length = 30) private String color;
 

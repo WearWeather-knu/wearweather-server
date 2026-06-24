@@ -46,4 +46,28 @@ class ClothesPersistenceServiceTests {
         assertThat(userClothesRepository.existsById(new UserClothesId(userId, created.clothes().getId()))).isTrue();
         assertThat(linkedAgain.closetLinked()).isFalse();
     }
+
+    @Test
+    void storesNullForEveryDetailFieldAndCategory() {
+        UUID userId = UUID.randomUUID();
+        userRepository.save(new User(userId, "nullable@example.com"));
+        ClothesDetailsPayload details = new ClothesDetailsPayload(
+                null, null, null, null, null, null, null, null, null, null
+        );
+
+        int productId = 1;
+        for (ClothesCategory category : ClothesCategory.values()) {
+            ClothesImportRequest request = new ClothesImportRequest(
+                    "token", "nullable-" + category, category, -5f, 35f, details, false
+            );
+
+            ClothesPersistenceService.PersistenceResult result = persistenceService.createAndLink(
+                    userId, request, details,
+                    "https://www.musinsa.com/products/nullable-" + productId++,
+                    "https://storage.example/nullable.webp"
+            );
+
+            assertThat(result.productCreated()).isTrue();
+        }
+    }
 }

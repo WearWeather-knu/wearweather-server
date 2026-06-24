@@ -18,10 +18,10 @@ import lombok.NoArgsConstructor;
 public class ClothesBag {
     @Id @Column(name = "clothes_id") private Long clothesId;
     @MapsId @OneToOne @JoinColumn(name = "clothes_id") private Clothes clothes;
-    @Column(nullable = false, length = 30) private String type;
+    @Column(length = 30) private String type;
     @Column(length = 50) private String material;
-    @Column(nullable = false, length = 30) private String color;
-    @Column(name = "is_waterproof", nullable = false) private Boolean waterproof;
+    @Column(length = 30) private String color;
+    @Column(name = "is_waterproof") private Boolean waterproof;
 
     public ClothesBag(Clothes clothes, String type, String material, String color, Boolean waterproof) {
         this.clothes = clothes;

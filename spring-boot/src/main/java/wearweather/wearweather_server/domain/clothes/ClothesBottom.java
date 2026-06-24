@@ -22,8 +22,8 @@ public class ClothesBottom {
     @MapsId @OneToOne @JoinColumn(name = "clothes_id") private Clothes clothes;
     @Enumerated(EnumType.STRING) @Column(length = 20) private BottomLength length;
     @Enumerated(EnumType.STRING) @Column(length = 20) private ClothesFit fit;
-    @Column(nullable = false, length = 50) private String material;
-    @Column(nullable = false, length = 30) private String color;
+    @Column(length = 50) private String material;
+    @Column(length = 30) private String color;
 
     public ClothesBottom(Clothes clothes, BottomLength length, ClothesFit fit, String material, String color) {
         this.clothes = clothes;

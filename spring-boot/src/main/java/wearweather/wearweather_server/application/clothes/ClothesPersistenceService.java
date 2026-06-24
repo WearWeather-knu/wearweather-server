@@ -64,35 +64,31 @@ public class ClothesPersistenceService {
         switch (clothes.getCategory()) {
             case TOP -> topRepository.save(new ClothesTop(
                     clothes, enumOrNull(SleeveLength.class, details.sleeveLength()),
-                    Thickness.valueOf(details.thickness()), enumOrNull(ClothesFit.class, details.fit()),
+                    enumOrNull(Thickness.class, details.thickness()), enumOrNull(ClothesFit.class, details.fit()),
                     details.material(), details.color()
             ));
             case OUTER -> outerRepository.save(new ClothesOuter(
-                    clothes, Thickness.valueOf(details.thickness()), enumOrNull(ClothesFit.class, details.fit()),
-                    defaultFalse(details.windproof()), defaultFalse(details.waterproof()), details.material(), details.color()
+                    clothes, enumOrNull(Thickness.class, details.thickness()), enumOrNull(ClothesFit.class, details.fit()),
+                    details.windproof(), details.waterproof(), details.material(), details.color()
             ));
             case BOTTOM -> bottomRepository.save(new ClothesBottom(
                     clothes, enumOrNull(BottomLength.class, details.length()), enumOrNull(ClothesFit.class, details.fit()),
                     details.material(), details.color()
             ));
             case ACC -> accessoryRepository.save(new ClothesAccessory(
-                    clothes, details.type(), details.warmthBonus() == null ? 0 : details.warmthBonus(), details.color()
+                    clothes, details.type(), details.warmthBonus(), details.color()
             ));
             case SHOES -> shoesRepository.save(new ClothesShoes(
-                    clothes, details.type(), defaultFalse(details.waterproof()), details.material(), details.color()
+                    clothes, details.type(), details.waterproof(), details.material(), details.color()
             ));
             case BAG -> bagRepository.save(new ClothesBag(
-                    clothes, details.type(), details.material(), details.color(), defaultFalse(details.waterproof())
+                    clothes, details.type(), details.material(), details.color(), details.waterproof()
             ));
         }
     }
 
     private <E extends Enum<E>> E enumOrNull(Class<E> type, String value) {
         return value == null ? null : Enum.valueOf(type, value);
-    }
-
-    private boolean defaultFalse(Boolean value) {
-        return Boolean.TRUE.equals(value);
     }
 
     public record PersistenceResult(Clothes clothes, boolean productCreated, boolean closetLinked) {

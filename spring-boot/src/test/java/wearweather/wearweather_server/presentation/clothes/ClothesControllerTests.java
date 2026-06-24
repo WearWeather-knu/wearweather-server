@@ -8,7 +8,7 @@ import wearweather.wearweather_server.application.auth.AuthenticatedUser;
 import wearweather.wearweather_server.application.auth.AuthenticationPort;
 import wearweather.wearweather_server.application.clothes.ClothesQueryService;
 import wearweather.wearweather_server.application.clothes.dto.ClothesResponse;
-import wearweather.wearweather_server.domain.clothes.ClothesCategory;
+import wearweather.wearweather_server.domain.clothes.type.ClothesCategory;
 
 import java.util.List;
 import java.util.UUID;

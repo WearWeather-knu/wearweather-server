@@ -19,9 +19,9 @@ import wearweather.wearweather_server.application.clothes.port.ClothesInferenceP
 import wearweather.wearweather_server.application.clothes.port.ProductImportPort;
 import wearweather.wearweather_server.application.clothes.port.RemoteImagePort;
 import wearweather.wearweather_server.application.user.UserService;
-import wearweather.wearweather_server.domain.clothes.Clothes;
-import wearweather.wearweather_server.domain.clothes.ClothesCategory;
-import wearweather.wearweather_server.domain.clothes.ClothesJpaRepository;
+import wearweather.wearweather_server.domain.clothes.entity.Clothes;
+import wearweather.wearweather_server.domain.clothes.repository.ClothesJpaRepository;
+import wearweather.wearweather_server.domain.clothes.type.ClothesCategory;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

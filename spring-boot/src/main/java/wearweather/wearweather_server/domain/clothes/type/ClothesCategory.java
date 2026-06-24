@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.domain.clothes;
+package wearweather.wearweather_server.domain.clothes.type;
 
 public enum ClothesCategory {
     OUTER,

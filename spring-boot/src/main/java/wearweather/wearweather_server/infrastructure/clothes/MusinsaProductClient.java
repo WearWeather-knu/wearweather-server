@@ -11,7 +11,7 @@ import tools.jackson.databind.ObjectMapper;
 import wearweather.wearweather_server.application.clothes.ClothesImportException;
 import wearweather.wearweather_server.application.clothes.MusinsaProduct;
 import wearweather.wearweather_server.application.clothes.port.ProductImportPort;
-import wearweather.wearweather_server.domain.clothes.ClothesCategory;
+import wearweather.wearweather_server.domain.clothes.type.ClothesCategory;
 import wearweather.wearweather_server.infrastructure.common.LimitedBodyReader;
 
 import java.io.IOException;

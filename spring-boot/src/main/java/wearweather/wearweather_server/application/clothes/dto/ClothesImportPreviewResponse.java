@@ -1,6 +1,6 @@
 package wearweather.wearweather_server.application.clothes.dto;
 
-import wearweather.wearweather_server.domain.clothes.ClothesCategory;
+import wearweather.wearweather_server.domain.clothes.type.ClothesCategory;
 
 import java.util.List;
 import java.util.Map;

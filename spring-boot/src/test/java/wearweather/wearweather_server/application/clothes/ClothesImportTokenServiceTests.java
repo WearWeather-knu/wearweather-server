@@ -2,7 +2,7 @@ package wearweather.wearweather_server.application.clothes;
 
 import org.junit.jupiter.api.Test;
 import tools.jackson.databind.ObjectMapper;
-import wearweather.wearweather_server.domain.clothes.ClothesCategory;
+import wearweather.wearweather_server.domain.clothes.type.ClothesCategory;
 
 import java.time.Clock;
 import java.time.Instant;

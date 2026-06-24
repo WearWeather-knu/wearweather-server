@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import wearweather.wearweather_server.application.auth.AuthenticatedUser;
 import wearweather.wearweather_server.application.clothes.dto.ClothesDetailsPayload;
 import wearweather.wearweather_server.application.clothes.dto.ClothesImportRequest;
-import wearweather.wearweather_server.domain.clothes.ClothesCategory;
+import wearweather.wearweather_server.domain.clothes.type.ClothesCategory;
 import wearweather.wearweather_server.domain.user.User;
 import wearweather.wearweather_server.domain.user.UserJpaRepository;
 

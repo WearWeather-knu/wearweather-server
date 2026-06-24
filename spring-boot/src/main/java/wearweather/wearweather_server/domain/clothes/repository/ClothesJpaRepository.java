@@ -1,8 +1,9 @@
-package wearweather.wearweather_server.domain.clothes;
+package wearweather.wearweather_server.domain.clothes.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import wearweather.wearweather_server.domain.clothes.entity.Clothes;
 
 import java.util.List;
 import java.util.Optional;

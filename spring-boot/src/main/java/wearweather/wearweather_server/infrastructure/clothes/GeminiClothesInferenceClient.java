@@ -15,7 +15,7 @@ import wearweather.wearweather_server.application.clothes.ClothesImportException
 import wearweather.wearweather_server.application.clothes.ClothesInferenceResult;
 import wearweather.wearweather_server.application.clothes.MusinsaProduct;
 import wearweather.wearweather_server.application.clothes.RemoteImage;
-import wearweather.wearweather_server.domain.clothes.ClothesCategory;
+import wearweather.wearweather_server.domain.clothes.type.ClothesCategory;
 import wearweather.wearweather_server.application.clothes.dto.ClothesDetailsPayload;
 import wearweather.wearweather_server.application.clothes.port.ClothesInferencePort;
 

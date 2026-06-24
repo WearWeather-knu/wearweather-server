@@ -1,7 +1,7 @@
 package wearweather.wearweather_server.application.clothes;
 
 import org.junit.jupiter.api.Test;
-import wearweather.wearweather_server.domain.clothes.ClothesCategory;
+import wearweather.wearweather_server.domain.clothes.type.ClothesCategory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

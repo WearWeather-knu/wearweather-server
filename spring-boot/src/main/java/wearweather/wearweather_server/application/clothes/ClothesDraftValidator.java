@@ -2,11 +2,11 @@ package wearweather.wearweather_server.application.clothes;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import wearweather.wearweather_server.domain.clothes.BottomLength;
-import wearweather.wearweather_server.domain.clothes.ClothesCategory;
-import wearweather.wearweather_server.domain.clothes.ClothesFit;
-import wearweather.wearweather_server.domain.clothes.SleeveLength;
-import wearweather.wearweather_server.domain.clothes.Thickness;
+import wearweather.wearweather_server.domain.clothes.type.BottomLength;
+import wearweather.wearweather_server.domain.clothes.type.ClothesCategory;
+import wearweather.wearweather_server.domain.clothes.type.ClothesFit;
+import wearweather.wearweather_server.domain.clothes.type.SleeveLength;
+import wearweather.wearweather_server.domain.clothes.type.Thickness;
 import wearweather.wearweather_server.application.clothes.dto.ClothesDetailsPayload;
 import wearweather.wearweather_server.application.clothes.dto.ClothesImportRequest;
 

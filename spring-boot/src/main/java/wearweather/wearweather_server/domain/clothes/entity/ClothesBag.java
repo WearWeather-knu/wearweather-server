@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.domain.clothes;
+package wearweather.wearweather_server.domain.clothes.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,21 +13,21 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "clothes_shoes")
+@Table(name = "clothes_bags")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ClothesShoes {
+public class ClothesBag {
     @Id @Column(name = "clothes_id") private Long clothesId;
     @MapsId @OneToOne @JoinColumn(name = "clothes_id") private Clothes clothes;
     @Column(length = 30) private String type;
-    @Column(name = "is_waterproof") private Boolean waterproof;
     @Column(length = 50) private String material;
     @Column(length = 30) private String color;
+    @Column(name = "is_waterproof") private Boolean waterproof;
 
-    public ClothesShoes(Clothes clothes, String type, Boolean waterproof, String material, String color) {
+    public ClothesBag(Clothes clothes, String type, String material, String color, Boolean waterproof) {
         this.clothes = clothes;
         this.type = type;
-        this.waterproof = waterproof;
         this.material = material;
         this.color = color;
+        this.waterproof = waterproof;
     }
 }

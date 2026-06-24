@@ -1,7 +1,7 @@
 package wearweather.wearweather_server.application.clothes.dto;
 
-import wearweather.wearweather_server.domain.clothes.Clothes;
-import wearweather.wearweather_server.domain.clothes.ClothesCategory;
+import wearweather.wearweather_server.domain.clothes.entity.Clothes;
+import wearweather.wearweather_server.domain.clothes.type.ClothesCategory;
 
 public record ClothesResponse(
         Long clothesId,

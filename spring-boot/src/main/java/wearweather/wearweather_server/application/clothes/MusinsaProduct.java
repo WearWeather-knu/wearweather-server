@@ -1,6 +1,6 @@
 package wearweather.wearweather_server.application.clothes;
 
-import wearweather.wearweather_server.domain.clothes.ClothesCategory;
+import wearweather.wearweather_server.domain.clothes.type.ClothesCategory;
 
 public record MusinsaProduct(
         String productId,

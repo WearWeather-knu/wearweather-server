@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import wearweather.wearweather_server.application.auth.AuthenticatedUser;
 import wearweather.wearweather_server.application.clothes.dto.ClothesResponse;
-import wearweather.wearweather_server.domain.clothes.ClothesJpaRepository;
+import wearweather.wearweather_server.domain.clothes.repository.ClothesJpaRepository;
 
 import java.util.List;
 

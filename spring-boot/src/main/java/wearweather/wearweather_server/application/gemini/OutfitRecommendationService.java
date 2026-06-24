@@ -11,9 +11,9 @@ import wearweather.wearweather_server.application.gemini.port.RecommendationImag
 import wearweather.wearweather_server.application.gemini.port.RecommendationImageStoragePort.StoredImage;
 import wearweather.wearweather_server.application.gemini.port.RecommendationImageStoragePort.StoredObject;
 import wearweather.wearweather_server.application.user.dto.UserResult;
-import wearweather.wearweather_server.domain.clothes.Clothes;
-import wearweather.wearweather_server.domain.clothes.ClothesCategory;
-import wearweather.wearweather_server.domain.clothes.ClothesJpaRepository;
+import wearweather.wearweather_server.domain.clothes.entity.Clothes;
+import wearweather.wearweather_server.domain.clothes.repository.ClothesJpaRepository;
+import wearweather.wearweather_server.domain.clothes.type.ClothesCategory;
 import wearweather.wearweather_server.domain.recommendation.Recommendation;
 import wearweather.wearweather_server.domain.recommendation.RecommendationJpaRepository;
 import wearweather.wearweather_server.domain.weather.WeatherLog;

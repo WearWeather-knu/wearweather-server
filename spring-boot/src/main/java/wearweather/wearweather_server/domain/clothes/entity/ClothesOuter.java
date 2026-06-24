@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.domain.clothes;
+package wearweather.wearweather_server.domain.clothes.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -12,23 +12,30 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import wearweather.wearweather_server.domain.clothes.type.ClothesFit;
+import wearweather.wearweather_server.domain.clothes.type.Thickness;
 
 @Entity
 @Getter
-@Table(name = "clothes_bottoms")
+@Table(name = "clothes_outers")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ClothesBottom {
+public class ClothesOuter {
     @Id @Column(name = "clothes_id") private Long clothesId;
     @MapsId @OneToOne @JoinColumn(name = "clothes_id") private Clothes clothes;
-    @Enumerated(EnumType.STRING) @Column(length = 20) private BottomLength length;
+    @Enumerated(EnumType.STRING) @Column(length = 20) private Thickness thickness;
     @Enumerated(EnumType.STRING) @Column(length = 20) private ClothesFit fit;
+    @Column(name = "is_windproof") private Boolean windproof;
+    @Column(name = "is_waterproof") private Boolean waterproof;
     @Column(length = 50) private String material;
     @Column(length = 30) private String color;
 
-    public ClothesBottom(Clothes clothes, BottomLength length, ClothesFit fit, String material, String color) {
+    public ClothesOuter(Clothes clothes, Thickness thickness, ClothesFit fit, Boolean windproof,
+                        Boolean waterproof, String material, String color) {
         this.clothes = clothes;
-        this.length = length;
+        this.thickness = thickness;
         this.fit = fit;
+        this.windproof = windproof;
+        this.waterproof = waterproof;
         this.material = material;
         this.color = color;
     }

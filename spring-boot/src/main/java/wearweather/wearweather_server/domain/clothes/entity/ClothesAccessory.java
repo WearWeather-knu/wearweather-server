@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.domain.clothes;
+package wearweather.wearweather_server.domain.clothes.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

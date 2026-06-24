@@ -10,12 +10,13 @@ public record ClothesResponse(
         String imageUrl,
         String originalUrl,
         Float minTemp,
-        Float maxTemp
+        Float maxTemp,
+        boolean favorite
 ) {
-    public static ClothesResponse from(Clothes clothes) {
+    public static ClothesResponse from(Clothes clothes, boolean favorite) {
         return new ClothesResponse(
                 clothes.getId(), clothes.getName(), clothes.getCategory(), clothes.getImageUrl(),
-                clothes.getOriginalUrl(), clothes.getMinTemp(), clothes.getMaxTemp()
+                clothes.getOriginalUrl(), clothes.getMinTemp(), clothes.getMaxTemp(), favorite
         );
     }
 }

@@ -45,7 +45,43 @@ Deno.serve(async (req) => {
     }
 
     let todayData = dailyData?.find((d) => d.date === todayStr) ?? null;
-    const yesterdayData = dailyData?.find((d) => d.date === yesterdayStr) ?? null;
+    let yesterdayData = dailyData?.find((d) => d.date === yesterdayStr) ?? null;
+
+    const aggregateFromLogs = (logs: any[], dateStr: string) => {
+      const avg = (key: string): number | null => {
+        const valid = logs.filter((r) => r[key] != null);
+        if (valid.length === 0) return null;
+        return valid.reduce((sum, r) => sum + r[key], 0) / valid.length;
+      };
+      const minOf = (key: string): number | null => {
+        const valid = logs.map((l) => l[key]).filter((v) => v != null);
+        return valid.length > 0 ? Math.min(...valid) : null;
+      };
+      const maxOf = (key: string): number | null => {
+        const valid = logs.map((l) => l[key]).filter((v) => v != null);
+        return valid.length > 0 ? Math.max(...valid) : null;
+      };
+      const avgPop = avg("pop");
+      const avgHumidity = avg("humidity");
+      const avgPm10 = avg("pm10");
+      const avgPm25 = avg("pm25");
+      return {
+        date: dateStr,
+        location_name,
+        avg_temp: avg("current_temp"),
+        feels_like: avg("feels_like"),
+        temp_min: minOf("temp_min"),
+        temp_max: maxOf("temp_max"),
+        precipitation: avg("precipitation"),
+        pop: avgPop != null ? Math.round(avgPop) : null,
+        humidity: avgHumidity != null ? Math.round(avgHumidity) : null,
+        wind_speed: avg("wind_speed"),
+        sky_status: logs[logs.length - 1]?.sky_status ?? null,
+        uv_index: avg("uv_index"),
+        pm10: avgPm10 != null ? Math.round(avgPm10) : null,
+        pm25: avgPm25 != null ? Math.round(avgPm25) : null,
+      };
+    };
 
     // 오늘 데이터가 weather_daily에 없으면 weather_logs에서 집계
     if (!todayData) {
@@ -56,47 +92,23 @@ Deno.serve(async (req) => {
         .eq("location_name", location_name);
 
       if (!logsError && todayLogs && todayLogs.length > 0) {
-        const avg = (key: string): number | null => {
-          const valid = todayLogs.filter((r) => r[key] != null);
-          if (valid.length === 0) return null;
-          return valid.reduce((sum, r) => sum + r[key], 0) / valid.length;
-        };
-
-        const minOf = (key: string): number | null => {
-          const valid = todayLogs.map((l) => l[key]).filter((v) => v != null);
-          return valid.length > 0 ? Math.min(...valid) : null;
-        };
-
-        const maxOf = (key: string): number | null => {
-          const valid = todayLogs.map((l) => l[key]).filter((v) => v != null);
-          return valid.length > 0 ? Math.max(...valid) : null;
-        };
-
-        const avgPop = avg("pop");
-        const avgHumidity = avg("humidity");
-        const avgPm10 = avg("pm10");
-        const avgPm25 = avg("pm25");
-
-        todayData = {
-          date: todayStr,
-          location_name,
-          avg_temp: avg("current_temp"),
-          temp_min: minOf("temp_min"),
-          temp_max: maxOf("temp_max"),
-          precipitation: avg("precipitation"),
-          pop: avgPop != null ? Math.round(avgPop) : null,
-          humidity: avgHumidity != null ? Math.round(avgHumidity) : null,
-          wind_speed: avg("wind_speed"),
-          sky_status: todayLogs[todayLogs.length - 1]?.sky_status ?? null,
-          uv_index: avg("uv_index"),
-          pm10: avgPm10 != null ? Math.round(avgPm10) : null,
-          pm25: avgPm25 != null ? Math.round(avgPm25) : null,
-        };
-
-        // weather_daily에 오늘 데이터 upsert
+        todayData = aggregateFromLogs(todayLogs, todayStr);
         await supabase
           .from("weather_daily")
           .upsert(todayData, { onConflict: "date,location_name" });
+      }
+    }
+
+    // 어제 데이터가 weather_daily에 없으면 weather_logs에서 집계
+    if (!yesterdayData) {
+      const { data: yesterdayLogs, error: logsError } = await supabase
+        .from("weather_logs")
+        .select("*")
+        .eq("base_date", yesterdayStr)
+        .eq("location_name", location_name);
+
+      if (!logsError && yesterdayLogs && yesterdayLogs.length > 0) {
+        yesterdayData = aggregateFromLogs(yesterdayLogs, yesterdayStr);
       }
     }
 

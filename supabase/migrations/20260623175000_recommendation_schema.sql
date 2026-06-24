@@ -1,0 +1,42 @@
+create table if not exists public.weather_logs (
+    id            bigint generated always as identity not null,
+    location_name character varying(255)   not null,
+    base_date     date                     not null,
+    current_temp  real                     not null,
+    temp_min      real                     null,
+    temp_max      real                     null,
+    feels_like    real                     null,
+    precipitation real                     null default 0,
+    uv_index      real                     null,
+    humidity      integer                  null,
+    wind_speed    real                     null,
+    sky_status    character varying(255)   null,
+    fetched_at    timestamp with time zone null default now(),
+    pop           integer                  null,
+    pm10          integer                  null,
+    pm25          integer                  null,
+    constraint weather_logs_pkey primary key (id),
+    constraint weather_logs_pop_check check ((pop >= 0) and (pop <= 100))
+);
+
+create table if not exists public.recommendation (
+    id            bigint generated always as identity not null,
+    user_id       uuid                     null,
+    weather_id    bigint                   null,
+    ai_suggestion character varying(255)   not null,
+    top_ids       jsonb                    not null,
+    bottom_id     bigint                   null,
+    outer_id      bigint                   null,
+    shoes_id      bigint                   null,
+    acc_ids       jsonb                    null default '[]'::jsonb,
+    created_at    timestamp with time zone null default now(),
+    is_like       boolean                  null default false,
+    bag_id        bigint                   null,
+    image_url     character varying(255)   not null,
+    constraint recommendation_pkey primary key (id),
+    constraint recommendation_bottom_id_fkey foreign key (bottom_id) references public.clothes(id),
+    constraint recommendation_outer_id_fkey foreign key (outer_id) references public.clothes(id),
+    constraint recommendation_shoes_id_fkey foreign key (shoes_id) references public.clothes(id),
+    constraint recommendation_user_id_fkey foreign key (user_id) references public.users(id) on delete cascade,
+    constraint recommendation_weather_id_fkey foreign key (weather_id) references public.weather_logs(id) on delete set null
+);

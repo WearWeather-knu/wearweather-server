@@ -38,6 +38,8 @@ app:
     token-ttl-seconds: ${CLOTHES_IMPORT_TOKEN_TTL_SECONDS:900}
     connect-timeout-seconds: ${CLOTHES_IMPORT_CONNECT_TIMEOUT_SECONDS:3}
     request-timeout-seconds: ${CLOTHES_IMPORT_REQUEST_TIMEOUT_SECONDS:8}
+    gemini-max-attempts: ${CLOTHES_IMPORT_GEMINI_MAX_ATTEMPTS:3}
+    gemini-retry-backoff-millis: ${CLOTHES_IMPORT_GEMINI_RETRY_BACKOFF_MILLIS:300}
     max-html-bytes: ${CLOTHES_IMPORT_MAX_HTML_BYTES:2097152}
     max-image-bytes: ${CLOTHES_IMPORT_MAX_IMAGE_BYTES:5242880}
   cors:

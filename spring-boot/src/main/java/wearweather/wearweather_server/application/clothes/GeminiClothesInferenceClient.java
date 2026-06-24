@@ -29,15 +29,18 @@ public class GeminiClothesInferenceClient {
     private final ObjectMapper objectMapper;
     private final String apiKey;
     private final String model;
+    private final GeminiRetryExecutor retryExecutor;
 
     public GeminiClothesInferenceClient(
             ObjectMapper objectMapper,
+            GeminiRetryExecutor retryExecutor,
             @Value("${gemini.api-key:}") String apiKey,
             @Value("${gemini.model:gemini-2.5-flash}") String model,
             @Value("${app.clothes-import.connect-timeout-seconds:3}") long connectTimeoutSeconds,
             @Value("${app.clothes-import.request-timeout-seconds:8}") long requestTimeoutSeconds
     ) {
         this.objectMapper = objectMapper;
+        this.retryExecutor = retryExecutor;
         this.apiKey = apiKey;
         this.model = model;
         HttpClient httpClient = HttpClient.newBuilder()
@@ -77,13 +80,13 @@ public class GeminiClothesInferenceClient {
 
         GeminiResponse response;
         try {
-            response = restClient.post()
+            response = retryExecutor.execute(() -> restClient.post()
                     .uri("/models/{model}:generateContent", model)
                     .header("x-goog-api-key", apiKey)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(request)
                     .retrieve()
-                    .body(GeminiResponse.class);
+                    .body(GeminiResponse.class));
         } catch (RestClientResponseException exception) {
             log.warn("Clothes inference failed: model={}, status={}", model, exception.getStatusCode());
             throw new ClothesImportException(HttpStatus.BAD_GATEWAY, "CLOTHES_INFERENCE_FAILED",

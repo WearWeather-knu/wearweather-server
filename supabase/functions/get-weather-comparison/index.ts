@@ -81,6 +81,7 @@ Deno.serve(async (req) => {
           date: todayStr,
           location_name,
           avg_temp: avg("current_temp"),
+          feels_like: avg("feels_like"),
           temp_min: minOf("temp_min"),
           temp_max: maxOf("temp_max"),
           precipitation: avg("precipitation"),

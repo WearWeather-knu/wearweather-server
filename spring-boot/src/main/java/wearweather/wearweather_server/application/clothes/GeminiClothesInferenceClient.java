@@ -12,7 +12,7 @@ import org.springframework.web.client.RestClientResponseException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import wearweather.wearweather_server.domain.clothes.ClothesCategory;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesDetailsPayload;
+import wearweather.wearweather_server.application.clothes.dto.ClothesDetailsPayload;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

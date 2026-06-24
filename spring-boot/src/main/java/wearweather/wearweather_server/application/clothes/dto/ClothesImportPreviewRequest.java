@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.presentation.clothes.dto;
+package wearweather.wearweather_server.application.clothes.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

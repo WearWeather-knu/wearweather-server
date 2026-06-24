@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import wearweather.wearweather_server.application.gemini.RecommendationImageStorageClient.StoredImage;
 import wearweather.wearweather_server.application.gemini.RecommendationImageStorageClient.StoredObject;
+import wearweather.wearweather_server.application.gemini.dto.OutfitImageRecommendationRequest;
+import wearweather.wearweather_server.application.gemini.dto.OutfitImageRecommendationResponse;
 import wearweather.wearweather_server.application.user.dto.UserResult;
 import wearweather.wearweather_server.domain.clothes.Clothes;
 import wearweather.wearweather_server.domain.clothes.ClothesCategory;
@@ -13,8 +15,6 @@ import wearweather.wearweather_server.domain.recommendation.Recommendation;
 import wearweather.wearweather_server.domain.recommendation.RecommendationJpaRepository;
 import wearweather.wearweather_server.domain.weather.WeatherLog;
 import wearweather.wearweather_server.domain.weather.WeatherLogJpaRepository;
-import wearweather.wearweather_server.presentation.gemini.dto.OutfitImageRecommendationRequest;
-import wearweather.wearweather_server.presentation.gemini.dto.OutfitImageRecommendationResponse;
 
 import java.util.ArrayList;
 import java.util.EnumSet;

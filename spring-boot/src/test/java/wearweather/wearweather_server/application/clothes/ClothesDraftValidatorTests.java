@@ -2,8 +2,8 @@ package wearweather.wearweather_server.application.clothes;
 
 import org.junit.jupiter.api.Test;
 import wearweather.wearweather_server.domain.clothes.ClothesCategory;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesDetailsPayload;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesImportRequest;
+import wearweather.wearweather_server.application.clothes.dto.ClothesDetailsPayload;
+import wearweather.wearweather_server.application.clothes.dto.ClothesImportRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

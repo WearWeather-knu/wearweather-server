@@ -24,8 +24,8 @@ import wearweather.wearweather_server.domain.clothes.Thickness;
 import wearweather.wearweather_server.domain.clothes.UserClothes;
 import wearweather.wearweather_server.domain.clothes.UserClothesId;
 import wearweather.wearweather_server.domain.clothes.UserClothesJpaRepository;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesDetailsPayload;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesImportRequest;
+import wearweather.wearweather_server.application.clothes.dto.ClothesDetailsPayload;
+import wearweather.wearweather_server.application.clothes.dto.ClothesImportRequest;
 
 import java.util.UUID;
 

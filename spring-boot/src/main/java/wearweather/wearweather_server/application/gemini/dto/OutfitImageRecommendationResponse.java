@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.presentation.gemini.dto;
+package wearweather.wearweather_server.application.gemini.dto;
 
 import java.util.List;
 import wearweather.wearweather_server.domain.clothes.ClothesCategory;

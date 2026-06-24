@@ -2,7 +2,7 @@ package wearweather.wearweather_server.application.clothes;
 
 import org.springframework.stereotype.Component;
 import wearweather.wearweather_server.domain.clothes.ClothesCategory;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesDetailsPayload;
+import wearweather.wearweather_server.application.clothes.dto.ClothesDetailsPayload;
 
 import java.util.Locale;
 

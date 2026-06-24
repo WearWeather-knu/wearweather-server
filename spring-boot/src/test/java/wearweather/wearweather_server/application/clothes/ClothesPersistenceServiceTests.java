@@ -10,8 +10,8 @@ import wearweather.wearweather_server.domain.clothes.UserClothesId;
 import wearweather.wearweather_server.domain.clothes.UserClothesJpaRepository;
 import wearweather.wearweather_server.domain.user.User;
 import wearweather.wearweather_server.domain.user.UserJpaRepository;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesDetailsPayload;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesImportRequest;
+import wearweather.wearweather_server.application.clothes.dto.ClothesDetailsPayload;
+import wearweather.wearweather_server.application.clothes.dto.ClothesImportRequest;
 
 import java.util.UUID;
 

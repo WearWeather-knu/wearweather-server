@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.presentation.clothes.dto;
+package wearweather.wearweather_server.application.clothes.dto;
 
 public record ClothesDetailsPayload(
         String sleeveLength,

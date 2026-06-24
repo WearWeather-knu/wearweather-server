@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RestController;
 import wearweather.wearweather_server.application.auth.AuthenticatedUser;
 import wearweather.wearweather_server.application.auth.SupabaseAuthService;
 import wearweather.wearweather_server.application.clothes.ClothesImportService;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesImportPreviewRequest;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesImportPreviewResponse;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesImportRequest;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesImportResponse;
+import wearweather.wearweather_server.application.clothes.dto.ClothesImportPreviewRequest;
+import wearweather.wearweather_server.application.clothes.dto.ClothesImportPreviewResponse;
+import wearweather.wearweather_server.application.clothes.dto.ClothesImportRequest;
+import wearweather.wearweather_server.application.clothes.dto.ClothesImportResponse;
 
 @RestController
 @RequiredArgsConstructor

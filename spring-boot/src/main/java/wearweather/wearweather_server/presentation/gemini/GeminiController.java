@@ -12,11 +12,11 @@ import wearweather.wearweather_server.application.auth.AuthenticatedUser;
 import wearweather.wearweather_server.application.auth.SupabaseAuthService;
 import wearweather.wearweather_server.application.gemini.GeminiService;
 import wearweather.wearweather_server.application.gemini.OutfitRecommendationService;
+import wearweather.wearweather_server.application.gemini.dto.OutfitImageRecommendationRequest;
+import wearweather.wearweather_server.application.gemini.dto.OutfitImageRecommendationResponse;
 import wearweather.wearweather_server.application.user.UserService;
 import wearweather.wearweather_server.presentation.gemini.dto.GeminiGenerateRequest;
 import wearweather.wearweather_server.presentation.gemini.dto.GeminiGenerateResponse;
-import wearweather.wearweather_server.presentation.gemini.dto.OutfitImageRecommendationRequest;
-import wearweather.wearweather_server.presentation.gemini.dto.OutfitImageRecommendationResponse;
 
 @RestController
 @RequiredArgsConstructor

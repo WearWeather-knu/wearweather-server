@@ -16,7 +16,7 @@ import wearweather.wearweather_server.domain.recommendation.Recommendation;
 import wearweather.wearweather_server.domain.recommendation.RecommendationJpaRepository;
 import wearweather.wearweather_server.domain.weather.WeatherLog;
 import wearweather.wearweather_server.domain.weather.WeatherLogJpaRepository;
-import wearweather.wearweather_server.presentation.gemini.dto.OutfitImageRecommendationRequest;
+import wearweather.wearweather_server.application.gemini.dto.OutfitImageRecommendationRequest;
 
 import java.util.List;
 import java.util.Optional;

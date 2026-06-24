@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.presentation.gemini.dto;
+package wearweather.wearweather_server.application.gemini.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

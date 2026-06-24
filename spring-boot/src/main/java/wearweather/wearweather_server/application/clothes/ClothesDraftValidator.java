@@ -7,8 +7,8 @@ import wearweather.wearweather_server.domain.clothes.ClothesCategory;
 import wearweather.wearweather_server.domain.clothes.ClothesFit;
 import wearweather.wearweather_server.domain.clothes.SleeveLength;
 import wearweather.wearweather_server.domain.clothes.Thickness;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesDetailsPayload;
-import wearweather.wearweather_server.presentation.clothes.dto.ClothesImportRequest;
+import wearweather.wearweather_server.application.clothes.dto.ClothesDetailsPayload;
+import wearweather.wearweather_server.application.clothes.dto.ClothesImportRequest;
 
 import java.util.Locale;
 import java.util.Set;

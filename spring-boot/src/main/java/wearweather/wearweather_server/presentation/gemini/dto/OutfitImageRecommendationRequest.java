@@ -1,10 +1,11 @@
 package wearweather.wearweather_server.presentation.gemini.dto;
 
-import java.util.Map;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 public record OutfitImageRecommendationRequest(
-        Map<String, Object> weather,
-        Integer outfitCount,
-        String style
+        @NotNull @Positive Long weatherId,
+        @Size(max = 100) String style
 ) {
 }

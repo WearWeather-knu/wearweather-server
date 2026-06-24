@@ -1,5 +1,6 @@
 package wearweather.wearweather_server.presentation.gemini;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import wearweather.wearweather_server.application.auth.AuthenticatedUser;
 import wearweather.wearweather_server.application.auth.SupabaseAuthService;
 import wearweather.wearweather_server.application.gemini.GeminiService;
+import wearweather.wearweather_server.application.gemini.OutfitRecommendationService;
 import wearweather.wearweather_server.application.user.UserService;
 import wearweather.wearweather_server.presentation.gemini.dto.GeminiGenerateRequest;
 import wearweather.wearweather_server.presentation.gemini.dto.GeminiGenerateResponse;
@@ -23,6 +25,7 @@ public class GeminiController {
 
     private final SupabaseAuthService supabaseAuthService;
     private final GeminiService geminiService;
+    private final OutfitRecommendationService outfitRecommendationService;
     private final UserService userService;
 
     @PostMapping("/generate")
@@ -37,10 +40,10 @@ public class GeminiController {
     @PostMapping("/outfit-images")
     public OutfitImageRecommendationResponse recommendOutfitImages(
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader,
-            @RequestBody OutfitImageRecommendationRequest request
+            @Valid @RequestBody OutfitImageRecommendationRequest request
     ) {
         AuthenticatedUser authenticatedUser = supabaseAuthService.authenticate(authorizationHeader);
-        return geminiService.recommendOutfitImages(
+        return outfitRecommendationService.recommend(
                 userService.getMe(authenticatedUser),
                 request
         );

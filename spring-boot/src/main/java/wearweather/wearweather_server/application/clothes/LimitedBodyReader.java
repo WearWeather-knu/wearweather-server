@@ -4,11 +4,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-final class LimitedBodyReader {
+public final class LimitedBodyReader {
     private LimitedBodyReader() {
     }
 
-    static byte[] read(InputStream inputStream, int maxBytes) throws IOException {
+    public static byte[] read(InputStream inputStream, int maxBytes) throws IOException {
         try (inputStream; ByteArrayOutputStream output = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[8192];
             int total = 0;
@@ -24,6 +24,6 @@ final class LimitedBodyReader {
         }
     }
 
-    static final class BodyTooLargeException extends IOException {
+    public static final class BodyTooLargeException extends IOException {
     }
 }

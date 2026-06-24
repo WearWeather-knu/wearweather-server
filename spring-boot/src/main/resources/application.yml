@@ -29,11 +29,17 @@ gemini:
   image-model: ${GEMINI_IMAGE_MODEL:gemini-2.5-flash-image}
 
 app:
+  outfit-recommendation:
+    connect-timeout-seconds: ${OUTFIT_RECOMMENDATION_CONNECT_TIMEOUT_SECONDS:5}
+    request-timeout-seconds: ${OUTFIT_RECOMMENDATION_REQUEST_TIMEOUT_SECONDS:30}
+    max-image-bytes: ${OUTFIT_RECOMMENDATION_MAX_IMAGE_BYTES:5242880}
   clothes-import:
     token-secret: ${CLOTHES_IMPORT_TOKEN_SECRET:}
     token-ttl-seconds: ${CLOTHES_IMPORT_TOKEN_TTL_SECONDS:900}
     connect-timeout-seconds: ${CLOTHES_IMPORT_CONNECT_TIMEOUT_SECONDS:3}
     request-timeout-seconds: ${CLOTHES_IMPORT_REQUEST_TIMEOUT_SECONDS:8}
+    gemini-max-attempts: ${CLOTHES_IMPORT_GEMINI_MAX_ATTEMPTS:3}
+    gemini-retry-backoff-millis: ${CLOTHES_IMPORT_GEMINI_RETRY_BACKOFF_MILLIS:300}
     max-html-bytes: ${CLOTHES_IMPORT_MAX_HTML_BYTES:2097152}
     max-image-bytes: ${CLOTHES_IMPORT_MAX_IMAGE_BYTES:5242880}
   cors:

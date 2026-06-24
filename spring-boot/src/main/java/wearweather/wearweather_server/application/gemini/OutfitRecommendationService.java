@@ -154,6 +154,6 @@ public class OutfitRecommendationService {
     }
 
     private RecommendationException invalidSelection(String message) {
-        return new RecommendationException(HttpStatus.BAD_GATEWAY, "INVALID_OUTFIT_SELECTION", message);
+        return new RecommendationException(HttpStatus.UNPROCESSABLE_ENTITY, "INVALID_OUTFIT_SELECTION", message);
     }
 }

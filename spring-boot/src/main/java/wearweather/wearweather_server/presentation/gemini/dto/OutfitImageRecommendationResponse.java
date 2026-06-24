@@ -1,15 +1,13 @@
 package wearweather.wearweather_server.presentation.gemini.dto;
 
 import java.util.List;
+import wearweather.wearweather_server.domain.clothes.ClothesCategory;
 
 public record OutfitImageRecommendationResponse(
+        Long recommendationId,
         String description,
-        List<GeneratedImage> images
+        String imageUrl,
+        List<Long> usedClothesIds,
+        List<ClothesCategory> missingCategories
 ) {
-
-    public record GeneratedImage(
-            String mimeType,
-            String dataUrl
-    ) {
-    }
 }

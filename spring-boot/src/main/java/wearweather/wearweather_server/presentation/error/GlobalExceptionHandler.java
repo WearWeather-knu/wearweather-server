@@ -7,12 +7,19 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import wearweather.wearweather_server.application.clothes.ClothesImportException;
+import wearweather.wearweather_server.application.gemini.RecommendationException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ClothesImportException.class)
     public ResponseEntity<ApiErrorResponse> handleClothesImport(ClothesImportException exception) {
+        return ResponseEntity.status(exception.status())
+                .body(ApiErrorResponse.of(exception.code(), exception.getMessage()));
+    }
+
+    @ExceptionHandler(RecommendationException.class)
+    public ResponseEntity<ApiErrorResponse> handleRecommendation(RecommendationException exception) {
         return ResponseEntity.status(exception.status())
                 .body(ApiErrorResponse.of(exception.code(), exception.getMessage()));
     }

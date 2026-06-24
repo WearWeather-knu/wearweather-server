@@ -29,6 +29,10 @@ gemini:
   image-model: ${GEMINI_IMAGE_MODEL:gemini-2.5-flash-image}
 
 app:
+  outfit-recommendation:
+    connect-timeout-seconds: ${OUTFIT_RECOMMENDATION_CONNECT_TIMEOUT_SECONDS:5}
+    request-timeout-seconds: ${OUTFIT_RECOMMENDATION_REQUEST_TIMEOUT_SECONDS:30}
+    max-image-bytes: ${OUTFIT_RECOMMENDATION_MAX_IMAGE_BYTES:5242880}
   clothes-import:
     token-secret: ${CLOTHES_IMPORT_TOKEN_SECRET:}
     token-ttl-seconds: ${CLOTHES_IMPORT_TOKEN_TTL_SECONDS:900}

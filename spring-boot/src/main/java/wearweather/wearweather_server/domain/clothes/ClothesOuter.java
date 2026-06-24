@@ -10,9 +10,11 @@ import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "clothes_outers")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ClothesOuter {

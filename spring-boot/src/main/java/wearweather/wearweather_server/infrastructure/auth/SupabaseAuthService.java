@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.application.auth;
+package wearweather.wearweather_server.infrastructure.auth;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -8,6 +8,8 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import wearweather.wearweather_server.application.auth.AuthenticatedUser;
+import wearweather.wearweather_server.application.auth.AuthenticationPort;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -29,7 +31,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class SupabaseAuthService {
+public class SupabaseAuthService implements AuthenticationPort {
 
     private static final Logger log = LoggerFactory.getLogger(SupabaseAuthService.class);
     private static final String BEARER_PREFIX = "Bearer ";
@@ -44,6 +46,7 @@ public class SupabaseAuthService {
         this.supabaseUrl = removeTrailingSlash(supabaseUrl);
     }
 
+    @Override
     public AuthenticatedUser authenticate(String authorizationHeader) {
         String accessToken = extractAccessToken(authorizationHeader);
         JwtClaims claims = parseAndVerifyClaims(accessToken);

@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.application.gemini;
+package wearweather.wearweather_server.infrastructure.gemini;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -9,19 +9,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
+import wearweather.wearweather_server.application.gemini.port.TextGenerationPort;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class GeminiService {
+public class GeminiTextGenerationClient implements TextGenerationPort {
 
-    private static final Logger log = LoggerFactory.getLogger(GeminiService.class);
+    private static final Logger log = LoggerFactory.getLogger(GeminiTextGenerationClient.class);
 
     private final RestClient restClient;
     private final String apiKey;
     private final String model;
 
-    public GeminiService(
+    public GeminiTextGenerationClient(
             @Value("${gemini.api-key:}") String apiKey,
             @Value("${gemini.model:gemini-2.5-flash}") String model
     ) {
@@ -32,6 +33,7 @@ public class GeminiService {
         this.model = model;
     }
 
+    @Override
     public String generate(String prompt) {
         if (prompt == null || prompt.isBlank()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "프롬프트를 입력해주세요.");

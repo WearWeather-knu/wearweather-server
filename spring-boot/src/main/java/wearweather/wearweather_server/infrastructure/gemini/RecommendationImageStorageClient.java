@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.application.gemini;
+package wearweather.wearweather_server.infrastructure.gemini;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +9,11 @@ import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
-import wearweather.wearweather_server.application.clothes.LimitedBodyReader;
+import wearweather.wearweather_server.application.gemini.RecommendationException;
+import wearweather.wearweather_server.application.gemini.port.RecommendationImageStoragePort;
+import wearweather.wearweather_server.application.gemini.port.RecommendationImageStoragePort.StoredImage;
+import wearweather.wearweather_server.application.gemini.port.RecommendationImageStoragePort.StoredObject;
+import wearweather.wearweather_server.infrastructure.common.LimitedBodyReader;
 
 import java.io.IOException;
 import java.net.URI;
@@ -22,7 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Component
-class RecommendationImageStorageClient {
+public class RecommendationImageStorageClient implements RecommendationImageStoragePort {
     private static final Logger log = LoggerFactory.getLogger(RecommendationImageStorageClient.class);
     private static final Map<String, String> EXTENSIONS = Map.of(
             "image/jpeg", "jpg",
@@ -38,7 +42,7 @@ class RecommendationImageStorageClient {
     private final String bucket;
     private final int maxImageBytes;
 
-    RecommendationImageStorageClient(
+    public RecommendationImageStorageClient(
             @Value("${supabase.url:}") String supabaseUrl,
             @Value("${supabase.service-role-key:}") String serviceRoleKey,
             @Value("${supabase.storage.clothes-bucket:clothes-images}") String bucket,
@@ -60,7 +64,8 @@ class RecommendationImageStorageClient {
         this.restClient = RestClient.builder().requestFactory(requestFactory).build();
     }
 
-    StoredImage download(String imageUrl) {
+    @Override
+    public StoredImage download(String imageUrl) {
         validateConfiguration();
         URI uri;
         try {
@@ -121,7 +126,8 @@ class RecommendationImageStorageClient {
         }
     }
 
-    StoredObject upload(UUID userId, byte[] png) {
+    @Override
+    public StoredObject upload(UUID userId, byte[] png) {
         validateConfiguration();
         if (png.length > maxImageBytes) {
             throw new RecommendationException(HttpStatus.PAYLOAD_TOO_LARGE, "RECOMMENDATION_IMAGE_TOO_LARGE",
@@ -149,7 +155,8 @@ class RecommendationImageStorageClient {
         );
     }
 
-    void deleteQuietly(String objectPath) {
+    @Override
+    public void deleteQuietly(String objectPath) {
         try {
             restClient.delete()
                     .uri(objectUri(objectPath))
@@ -199,9 +206,4 @@ class RecommendationImageStorageClient {
         return value.endsWith("/") ? value.substring(0, value.length() - 1) : value;
     }
 
-    record StoredImage(byte[] bytes, String contentType) {
-    }
-
-    record StoredObject(String publicUrl, String objectPath) {
-    }
 }

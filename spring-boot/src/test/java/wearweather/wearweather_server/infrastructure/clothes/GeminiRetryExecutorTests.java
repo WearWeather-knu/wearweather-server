@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.application.clothes;
+package wearweather.wearweather_server.infrastructure.clothes;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;

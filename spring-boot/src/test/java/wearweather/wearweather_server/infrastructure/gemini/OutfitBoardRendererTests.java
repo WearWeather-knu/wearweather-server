@@ -1,6 +1,7 @@
-package wearweather.wearweather_server.application.gemini;
+package wearweather.wearweather_server.infrastructure.gemini;
 
 import org.junit.jupiter.api.Test;
+import wearweather.wearweather_server.application.gemini.port.RecommendationImageStoragePort.StoredImage;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;
@@ -20,8 +21,8 @@ class OutfitBoardRendererTests {
         byte[] landscape = image("jpg", 500, 260, Color.RED);
 
         byte[] result = renderer.render(List.of(
-                new RecommendationImageStorageClient.StoredImage(portrait, "image/png"),
-                new RecommendationImageStorageClient.StoredImage(landscape, "image/jpeg")
+                new StoredImage(portrait, "image/png"),
+                new StoredImage(landscape, "image/jpeg")
         ));
 
         BufferedImage board = ImageIO.read(new ByteArrayInputStream(result));

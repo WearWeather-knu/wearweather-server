@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.application.clothes;
+package wearweather.wearweather_server.infrastructure.clothes;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -7,13 +7,16 @@ import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
+import wearweather.wearweather_server.application.clothes.ClothesImportException;
+import wearweather.wearweather_server.application.clothes.RemoteImage;
+import wearweather.wearweather_server.application.clothes.port.ClothesImageStoragePort;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.time.Duration;
 
 @Component
-public class SupabaseClothesStorageClient {
+public class SupabaseClothesStorageClient implements ClothesImageStoragePort {
     private final RestClient restClient;
     private final String supabaseUrl;
     private final String serviceRoleKey;
@@ -37,6 +40,7 @@ public class SupabaseClothesStorageClient {
         this.restClient = RestClient.builder().requestFactory(requestFactory).build();
     }
 
+    @Override
     public String uploadMusinsaProduct(String productId, RemoteImage image) {
         validateConfiguration();
         String objectPath = "products/musinsa/" + productId + "." + image.extension();

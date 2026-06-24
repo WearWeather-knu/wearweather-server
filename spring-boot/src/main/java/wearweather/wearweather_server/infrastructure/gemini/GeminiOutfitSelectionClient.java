@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.application.gemini;
+package wearweather.wearweather_server.infrastructure.gemini;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +11,10 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import wearweather.wearweather_server.application.gemini.OutfitCandidate;
+import wearweather.wearweather_server.application.gemini.OutfitSelection;
+import wearweather.wearweather_server.application.gemini.RecommendationException;
+import wearweather.wearweather_server.application.gemini.port.OutfitSelectionPort;
 import wearweather.wearweather_server.application.user.dto.UserResult;
 import wearweather.wearweather_server.domain.weather.WeatherLog;
 
@@ -22,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-class GeminiOutfitSelectionClient {
+public class GeminiOutfitSelectionClient implements OutfitSelectionPort {
     private static final Logger log = LoggerFactory.getLogger(GeminiOutfitSelectionClient.class);
 
     private final RestClient restClient;
@@ -30,7 +34,7 @@ class GeminiOutfitSelectionClient {
     private final String apiKey;
     private final String model;
 
-    GeminiOutfitSelectionClient(
+    public GeminiOutfitSelectionClient(
             ObjectMapper objectMapper,
             @Value("${gemini.api-key:}") String apiKey,
             @Value("${gemini.model:gemini-2.5-flash}") String model,
@@ -51,8 +55,9 @@ class GeminiOutfitSelectionClient {
                 .build();
     }
 
-    OutfitSelection select(WeatherLog weather, UserResult user, String requestedStyle,
-                           List<OutfitCandidate> candidates) {
+    @Override
+    public OutfitSelection select(WeatherLog weather, UserResult user, String requestedStyle,
+                                  List<OutfitCandidate> candidates) {
         if (apiKey == null || apiKey.isBlank()) {
             throw new RecommendationException(HttpStatus.INTERNAL_SERVER_ERROR,
                     "GEMINI_CONFIGURATION_MISSING", "Gemini API key 설정이 필요합니다.");

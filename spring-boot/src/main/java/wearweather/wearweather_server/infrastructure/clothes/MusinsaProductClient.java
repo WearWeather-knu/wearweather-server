@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.application.clothes;
+package wearweather.wearweather_server.infrastructure.clothes;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -8,7 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import wearweather.wearweather_server.application.clothes.ClothesImportException;
+import wearweather.wearweather_server.application.clothes.MusinsaProduct;
+import wearweather.wearweather_server.application.clothes.port.ProductImportPort;
 import wearweather.wearweather_server.domain.clothes.ClothesCategory;
+import wearweather.wearweather_server.infrastructure.common.LimitedBodyReader;
 
 import java.io.IOException;
 import java.net.URI;
@@ -24,7 +28,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class MusinsaProductClient {
+public class MusinsaProductClient implements ProductImportPort {
     private static final Pattern PRODUCT_PATH = Pattern.compile("^/(?:products|app/goods)/(\\d+)(?:/.*)?$");
     private static final int MAX_REDIRECTS = 3;
     private static final int MAX_DESCRIPTION_CHARS = 12_000;
@@ -49,6 +53,7 @@ public class MusinsaProductClient {
                 .build();
     }
 
+    @Override
     public MusinsaProduct fetch(String originalUrl) {
         CanonicalProduct canonical = canonicalize(originalUrl);
         byte[] html = fetchHtml(URI.create(canonical.url()), 0);

@@ -9,6 +9,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 import wearweather.wearweather_server.application.user.dto.UserResult;
+import wearweather.wearweather_server.application.gemini.port.OutfitImageRenderer;
+import wearweather.wearweather_server.application.gemini.port.OutfitSelectionPort;
+import wearweather.wearweather_server.application.gemini.port.RecommendationImageStoragePort;
+import wearweather.wearweather_server.application.gemini.port.RecommendationImageStoragePort.StoredImage;
+import wearweather.wearweather_server.application.gemini.port.RecommendationImageStoragePort.StoredObject;
 import wearweather.wearweather_server.domain.clothes.Clothes;
 import wearweather.wearweather_server.domain.clothes.ClothesCategory;
 import wearweather.wearweather_server.domain.clothes.ClothesJpaRepository;
@@ -35,9 +40,9 @@ class OutfitRecommendationServiceTests {
     @Mock ClothesJpaRepository clothesRepository;
     @Mock RecommendationJpaRepository recommendationRepository;
     @Mock OutfitCandidateAssembler candidateAssembler;
-    @Mock GeminiOutfitSelectionClient selectionClient;
-    @Mock RecommendationImageStorageClient imageStorageClient;
-    @Mock OutfitBoardRenderer boardRenderer;
+    @Mock OutfitSelectionPort selectionPort;
+    @Mock RecommendationImageStoragePort imageStoragePort;
+    @Mock OutfitImageRenderer imageRenderer;
 
     private OutfitRecommendationService service;
     private UserResult user;
@@ -47,7 +52,7 @@ class OutfitRecommendationServiceTests {
     void setUp() {
         service = new OutfitRecommendationService(
                 weatherRepository, clothesRepository, recommendationRepository, candidateAssembler,
-                selectionClient, imageStorageClient, boardRenderer
+                selectionPort, imageStoragePort, imageRenderer
         );
         user = new UserResult(UUID.randomUUID(), "user@example.com", "tester", 25,
                 null, 0.0f, null);
@@ -73,13 +78,13 @@ class OutfitRecommendationServiceTests {
         when(weatherRepository.findById(7L)).thenReturn(Optional.of(weather));
         when(clothesRepository.findActiveByUserId(user.id())).thenReturn(List.of(top));
         when(candidateAssembler.assemble(List.of(top))).thenReturn(List.of());
-        when(selectionClient.select(weather, user, null, List.of()))
+        when(selectionPort.select(weather, user, null, List.of()))
                 .thenReturn(new OutfitSelection("설명", List.of(999L), null, null, null, List.of(), null));
 
         assertThatThrownBy(() -> service.recommend(user, new OutfitImageRecommendationRequest(7L, null)))
                 .isInstanceOfSatisfying(RecommendationException.class,
                         exception -> assertThat(exception.code()).isEqualTo("INVALID_OUTFIT_SELECTION"));
-        verify(imageStorageClient, never()).download(any());
+        verify(imageStoragePort, never()).download(any());
         verify(recommendationRepository, never()).saveAndFlush(any());
     }
 
@@ -91,18 +96,18 @@ class OutfitRecommendationServiceTests {
         OutfitSelection selection = new OutfitSelection(
                 "쌀쌀한 날씨에 맞춘 코디", List.of(1L), 2L, null, null, List.of(), null
         );
-        var storedImage = new RecommendationImageStorageClient.StoredImage(new byte[]{1}, "image/png");
-        var storedObject = new RecommendationImageStorageClient.StoredObject(
+        var storedImage = new StoredImage(new byte[]{1}, "image/png");
+        var storedObject = new StoredObject(
                 "https://example.supabase.co/recommendation.png", "recommendations/user/image.png"
         );
 
         when(weatherRepository.findById(7L)).thenReturn(Optional.of(weather));
         when(clothesRepository.findActiveByUserId(user.id())).thenReturn(clothes);
         when(candidateAssembler.assemble(clothes)).thenReturn(List.of());
-        when(selectionClient.select(weather, user, "MINIMAL", List.of())).thenReturn(selection);
-        when(imageStorageClient.download(any())).thenReturn(storedImage);
-        when(boardRenderer.render(List.of(storedImage, storedImage))).thenReturn(new byte[]{9, 8, 7});
-        when(imageStorageClient.upload(user.id(), new byte[]{9, 8, 7})).thenReturn(storedObject);
+        when(selectionPort.select(weather, user, "MINIMAL", List.of())).thenReturn(selection);
+        when(imageStoragePort.download(any())).thenReturn(storedImage);
+        when(imageRenderer.render(List.of(storedImage, storedImage))).thenReturn(new byte[]{9, 8, 7});
+        when(imageStoragePort.upload(user.id(), new byte[]{9, 8, 7})).thenReturn(storedObject);
         when(recommendationRepository.saveAndFlush(any())).thenAnswer(invocation -> {
             Recommendation saved = invocation.getArgument(0);
             ReflectionTestUtils.setField(saved, "id", 101L);
@@ -128,22 +133,22 @@ class OutfitRecommendationServiceTests {
     void deletesUploadedImageWhenHistorySaveFails() {
         Clothes top = clothes(1L, ClothesCategory.TOP);
         OutfitSelection selection = new OutfitSelection("설명", List.of(1L), null, null, null, List.of(), null);
-        var storedImage = new RecommendationImageStorageClient.StoredImage(new byte[]{1}, "image/png");
-        var storedObject = new RecommendationImageStorageClient.StoredObject("https://image", "recommendations/path.png");
+        var storedImage = new StoredImage(new byte[]{1}, "image/png");
+        var storedObject = new StoredObject("https://image", "recommendations/path.png");
 
         when(weatherRepository.findById(7L)).thenReturn(Optional.of(weather));
         when(clothesRepository.findActiveByUserId(user.id())).thenReturn(List.of(top));
         when(candidateAssembler.assemble(List.of(top))).thenReturn(List.of());
-        when(selectionClient.select(weather, user, null, List.of())).thenReturn(selection);
-        when(imageStorageClient.download(top.getImageUrl())).thenReturn(storedImage);
-        when(boardRenderer.render(List.of(storedImage))).thenReturn(new byte[]{2});
-        when(imageStorageClient.upload(user.id(), new byte[]{2})).thenReturn(storedObject);
+        when(selectionPort.select(weather, user, null, List.of())).thenReturn(selection);
+        when(imageStoragePort.download(top.getImageUrl())).thenReturn(storedImage);
+        when(imageRenderer.render(List.of(storedImage))).thenReturn(new byte[]{2});
+        when(imageStoragePort.upload(user.id(), new byte[]{2})).thenReturn(storedObject);
         when(recommendationRepository.saveAndFlush(any())).thenThrow(new IllegalStateException("db failed"));
 
         assertThatThrownBy(() -> service.recommend(user, new OutfitImageRecommendationRequest(7L, null)))
                 .isInstanceOfSatisfying(RecommendationException.class,
                         exception -> assertThat(exception.code()).isEqualTo("RECOMMENDATION_SAVE_FAILED"));
-        verify(imageStorageClient).deleteQuietly(storedObject.objectPath());
+        verify(imageStoragePort).deleteQuietly(storedObject.objectPath());
     }
 
     private Clothes clothes(Long id, ClothesCategory category) {

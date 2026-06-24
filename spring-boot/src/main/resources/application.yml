@@ -47,7 +47,7 @@ app:
 
 logging:
   level:
-    wearweather.wearweather_server.application.auth: DEBUG
+    wearweather.wearweather_server.infrastructure.auth: DEBUG
     wearweather.wearweather_server.application.gemini: DEBUG
 
 springdoc:

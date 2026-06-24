@@ -1,7 +1,10 @@
-package wearweather.wearweather_server.application.gemini;
+package wearweather.wearweather_server.infrastructure.gemini;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import wearweather.wearweather_server.application.gemini.RecommendationException;
+import wearweather.wearweather_server.application.gemini.port.OutfitImageRenderer;
+import wearweather.wearweather_server.application.gemini.port.RecommendationImageStoragePort.StoredImage;
 
 import javax.imageio.ImageIO;
 import java.awt.Color;
@@ -15,14 +18,15 @@ import java.io.IOException;
 import java.util.List;
 
 @Component
-class OutfitBoardRenderer {
+public class OutfitBoardRenderer implements OutfitImageRenderer {
     private static final int WIDTH = 1000;
     private static final int HEIGHT = 1400;
     private static final int OUTER_MARGIN = 72;
     private static final int GAP = 36;
     private static final int CARD_PADDING = 28;
 
-    byte[] render(List<RecommendationImageStorageClient.StoredImage> images) {
+    @Override
+    public byte[] render(List<StoredImage> images) {
         if (images.isEmpty()) {
             throw new RecommendationException(HttpStatus.UNPROCESSABLE_ENTITY, "NO_RENDERABLE_CLOTHES",
                     "코디 이미지로 만들 수 있는 옷이 없습니다.");
@@ -64,7 +68,7 @@ class OutfitBoardRenderer {
         }
     }
 
-    private BufferedImage decode(RecommendationImageStorageClient.StoredImage image) {
+    private BufferedImage decode(StoredImage image) {
         try {
             BufferedImage decoded = ImageIO.read(new ByteArrayInputStream(image.bytes()));
             if (decoded == null) throw new IOException("unsupported image data: " + image.contentType());

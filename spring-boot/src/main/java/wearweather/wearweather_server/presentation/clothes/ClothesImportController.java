@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import wearweather.wearweather_server.application.auth.AuthenticatedUser;
-import wearweather.wearweather_server.application.auth.SupabaseAuthService;
+import wearweather.wearweather_server.application.auth.AuthenticationPort;
 import wearweather.wearweather_server.application.clothes.ClothesImportService;
 import wearweather.wearweather_server.application.clothes.dto.ClothesImportPreviewRequest;
 import wearweather.wearweather_server.application.clothes.dto.ClothesImportPreviewResponse;
@@ -22,7 +22,7 @@ import wearweather.wearweather_server.application.clothes.dto.ClothesImportRespo
 @RequiredArgsConstructor
 @RequestMapping("/clothes/import")
 public class ClothesImportController {
-    private final SupabaseAuthService authService;
+    private final AuthenticationPort authenticationPort;
     private final ClothesImportService importService;
 
     @PostMapping("/preview")
@@ -30,7 +30,7 @@ public class ClothesImportController {
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader,
             @Valid @RequestBody ClothesImportPreviewRequest request
     ) {
-        AuthenticatedUser user = authService.authenticate(authorizationHeader);
+        AuthenticatedUser user = authenticationPort.authenticate(authorizationHeader);
         return importService.preview(user, request);
     }
 
@@ -39,7 +39,7 @@ public class ClothesImportController {
             @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader,
             @Valid @RequestBody ClothesImportRequest request
     ) {
-        AuthenticatedUser user = authService.authenticate(authorizationHeader);
+        AuthenticatedUser user = authenticationPort.authenticate(authorizationHeader);
         ClothesImportResponse response = importService.save(user, request);
         return ResponseEntity.status(response.closetLinked() ? HttpStatus.CREATED : HttpStatus.OK).body(response);
     }

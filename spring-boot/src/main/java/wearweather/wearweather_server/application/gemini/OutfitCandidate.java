@@ -4,7 +4,7 @@ import wearweather.wearweather_server.domain.clothes.ClothesCategory;
 
 import java.util.Map;
 
-record OutfitCandidate(
+public record OutfitCandidate(
         Long id,
         String name,
         ClothesCategory category,

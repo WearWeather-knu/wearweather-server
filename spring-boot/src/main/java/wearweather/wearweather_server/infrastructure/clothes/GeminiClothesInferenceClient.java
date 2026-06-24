@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.application.clothes;
+package wearweather.wearweather_server.infrastructure.clothes;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,8 +11,13 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientResponseException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
+import wearweather.wearweather_server.application.clothes.ClothesImportException;
+import wearweather.wearweather_server.application.clothes.ClothesInferenceResult;
+import wearweather.wearweather_server.application.clothes.MusinsaProduct;
+import wearweather.wearweather_server.application.clothes.RemoteImage;
 import wearweather.wearweather_server.domain.clothes.ClothesCategory;
 import wearweather.wearweather_server.application.clothes.dto.ClothesDetailsPayload;
+import wearweather.wearweather_server.application.clothes.port.ClothesInferencePort;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -22,7 +27,7 @@ import java.net.http.HttpClient;
 import java.time.Duration;
 
 @Component
-public class GeminiClothesInferenceClient {
+public class GeminiClothesInferenceClient implements ClothesInferencePort {
     private static final Logger log = LoggerFactory.getLogger(GeminiClothesInferenceClient.class);
 
     private final RestClient restClient;
@@ -54,6 +59,7 @@ public class GeminiClothesInferenceClient {
                 .build();
     }
 
+    @Override
     public ClothesInferenceResult infer(MusinsaProduct product, ClothesCategory category, RemoteImage image) {
         if (apiKey == null || apiKey.isBlank()) {
             throw new ClothesImportException(HttpStatus.BAD_GATEWAY, "CLOTHES_INFERENCE_UNAVAILABLE",

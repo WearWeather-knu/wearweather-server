@@ -3,10 +3,13 @@ package wearweather.wearweather_server.application.gemini;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import wearweather.wearweather_server.application.gemini.RecommendationImageStorageClient.StoredImage;
-import wearweather.wearweather_server.application.gemini.RecommendationImageStorageClient.StoredObject;
 import wearweather.wearweather_server.application.gemini.dto.OutfitImageRecommendationRequest;
 import wearweather.wearweather_server.application.gemini.dto.OutfitImageRecommendationResponse;
+import wearweather.wearweather_server.application.gemini.port.OutfitImageRenderer;
+import wearweather.wearweather_server.application.gemini.port.OutfitSelectionPort;
+import wearweather.wearweather_server.application.gemini.port.RecommendationImageStoragePort;
+import wearweather.wearweather_server.application.gemini.port.RecommendationImageStoragePort.StoredImage;
+import wearweather.wearweather_server.application.gemini.port.RecommendationImageStoragePort.StoredObject;
 import wearweather.wearweather_server.application.user.dto.UserResult;
 import wearweather.wearweather_server.domain.clothes.Clothes;
 import wearweather.wearweather_server.domain.clothes.ClothesCategory;
@@ -35,9 +38,9 @@ public class OutfitRecommendationService {
     private final ClothesJpaRepository clothesRepository;
     private final RecommendationJpaRepository recommendationRepository;
     private final OutfitCandidateAssembler candidateAssembler;
-    private final GeminiOutfitSelectionClient selectionClient;
-    private final RecommendationImageStorageClient imageStorageClient;
-    private final OutfitBoardRenderer boardRenderer;
+    private final OutfitSelectionPort selectionPort;
+    private final RecommendationImageStoragePort imageStoragePort;
+    private final OutfitImageRenderer imageRenderer;
 
     public OutfitImageRecommendationResponse recommend(
             UserResult user,
@@ -60,7 +63,7 @@ public class OutfitRecommendationService {
                     "이미지가 등록된 옷이 없어 코디 이미지를 만들 수 없습니다.");
         }
 
-        OutfitSelection selection = selectionClient.select(
+        OutfitSelection selection = selectionPort.select(
                 weather, user, request.style(), candidateAssembler.assemble(candidates)
         );
         Map<Long, Clothes> candidateById = new HashMap<>();
@@ -71,10 +74,10 @@ public class OutfitRecommendationService {
         List<StoredImage> sourceImages = selectedIds.stream()
                 .map(candidateById::get)
                 .map(Clothes::getImageUrl)
-                .map(imageStorageClient::download)
+                .map(imageStoragePort::download)
                 .toList();
-        byte[] png = boardRenderer.render(sourceImages);
-        StoredObject storedObject = imageStorageClient.upload(user.id(), png);
+        byte[] png = imageRenderer.render(sourceImages);
+        StoredObject storedObject = imageStoragePort.upload(user.id(), png);
 
         Recommendation recommendation;
         try {
@@ -84,7 +87,7 @@ public class OutfitRecommendationService {
                     selection.accIds(), selection.bagId(), storedObject.publicUrl()
             ));
         } catch (RuntimeException exception) {
-            imageStorageClient.deleteQuietly(storedObject.objectPath());
+            imageStoragePort.deleteQuietly(storedObject.objectPath());
             throw new RecommendationException(HttpStatus.INTERNAL_SERVER_ERROR, "RECOMMENDATION_SAVE_FAILED",
                     "추천 이력을 저장하지 못했습니다.", exception);
         }

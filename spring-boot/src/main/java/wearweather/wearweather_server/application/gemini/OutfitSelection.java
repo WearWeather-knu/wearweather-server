@@ -3,7 +3,7 @@ package wearweather.wearweather_server.application.gemini;
 import java.util.ArrayList;
 import java.util.List;
 
-record OutfitSelection(
+public record OutfitSelection(
         String description,
         List<Long> topIds,
         Long bottomId,
@@ -12,12 +12,12 @@ record OutfitSelection(
         List<Long> accIds,
         Long bagId
 ) {
-    OutfitSelection {
+    public OutfitSelection {
         topIds = topIds == null ? List.of() : List.copyOf(topIds);
         accIds = accIds == null ? List.of() : List.copyOf(accIds);
     }
 
-    List<Long> allIds() {
+    public List<Long> allIds() {
         List<Long> ids = new ArrayList<>(topIds);
         add(ids, bottomId);
         add(ids, outerId);

@@ -1,4 +1,4 @@
-package wearweather.wearweather_server.application.clothes;
+package wearweather.wearweather_server.infrastructure.common;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

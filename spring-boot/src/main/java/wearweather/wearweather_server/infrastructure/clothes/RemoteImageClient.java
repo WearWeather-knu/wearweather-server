@@ -1,8 +1,12 @@
-package wearweather.wearweather_server.application.clothes;
+package wearweather.wearweather_server.infrastructure.clothes;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import wearweather.wearweather_server.application.clothes.ClothesImportException;
+import wearweather.wearweather_server.application.clothes.RemoteImage;
+import wearweather.wearweather_server.application.clothes.port.RemoteImagePort;
+import wearweather.wearweather_server.infrastructure.common.LimitedBodyReader;
 
 import java.io.IOException;
 import java.net.URI;
@@ -14,7 +18,7 @@ import java.util.Locale;
 import java.util.Map;
 
 @Component
-public class RemoteImageClient {
+public class RemoteImageClient implements RemoteImagePort {
     private static final int MAX_REDIRECTS = 3;
     private static final Map<String, String> EXTENSIONS = Map.of(
             "image/jpeg", "jpg",
@@ -39,6 +43,7 @@ public class RemoteImageClient {
                 .build();
     }
 
+    @Override
     public RemoteImage download(String imageUrl) {
         try {
             return download(URI.create(imageUrl), 0);

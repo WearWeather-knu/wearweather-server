@@ -14,6 +14,10 @@ import wearweather.wearweather_server.application.clothes.dto.ClothesImportPrevi
 import wearweather.wearweather_server.application.clothes.dto.ClothesImportPreviewResponse.FieldSource;
 import wearweather.wearweather_server.application.clothes.dto.ClothesImportRequest;
 import wearweather.wearweather_server.application.clothes.dto.ClothesImportResponse;
+import wearweather.wearweather_server.application.clothes.port.ClothesImageStoragePort;
+import wearweather.wearweather_server.application.clothes.port.ClothesInferencePort;
+import wearweather.wearweather_server.application.clothes.port.ProductImportPort;
+import wearweather.wearweather_server.application.clothes.port.RemoteImagePort;
 import wearweather.wearweather_server.application.user.UserService;
 import wearweather.wearweather_server.domain.clothes.Clothes;
 import wearweather.wearweather_server.domain.clothes.ClothesCategory;
@@ -29,12 +33,12 @@ import java.util.Map;
 public class ClothesImportService {
     private static final Logger log = LoggerFactory.getLogger(ClothesImportService.class);
 
-    private final MusinsaProductClient musinsaProductClient;
-    private final RemoteImageClient remoteImageClient;
+    private final ProductImportPort productImportPort;
+    private final RemoteImagePort remoteImagePort;
     private final ClothesRuleInference ruleInference;
-    private final GeminiClothesInferenceClient geminiInferenceClient;
+    private final ClothesInferencePort clothesInferencePort;
     private final ClothesImportTokenService tokenService;
-    private final SupabaseClothesStorageClient storageClient;
+    private final ClothesImageStoragePort imageStoragePort;
     private final ClothesDraftValidator validator;
     private final ClothesPersistenceService persistenceService;
     private final ClothesJpaRepository clothesRepository;
@@ -42,13 +46,13 @@ public class ClothesImportService {
 
     public ClothesImportPreviewResponse preview(AuthenticatedUser user, ClothesImportPreviewRequest request) {
         long startedAt = System.nanoTime();
-        MusinsaProduct product = musinsaProductClient.fetch(request.originalUrl());
+        MusinsaProduct product = productImportPort.fetch(request.originalUrl());
         boolean existing = clothesRepository.findByOriginalUrl(product.canonicalUrl()).isPresent();
         List<String> warnings = new ArrayList<>();
 
         RemoteImage image = null;
         try {
-            image = remoteImageClient.download(product.imageUrl());
+            image = remoteImagePort.download(product.imageUrl());
         } catch (ClothesImportException exception) {
             warnings.add("대표 이미지를 분석하지 못했습니다. 저장 시 다시 확인합니다.");
         }
@@ -56,7 +60,7 @@ public class ClothesImportService {
         ClothesInferenceResult ruleResult = ruleInference.infer(product, request.category());
         ClothesInferenceResult geminiResult = null;
         try {
-            geminiResult = geminiInferenceClient.infer(product, request.category(), image);
+            geminiResult = clothesInferencePort.infer(product, request.category(), image);
         } catch (ClothesImportException exception) {
             log.warn("Clothes inference degraded: productId={}, code={}", product.productId(), exception.code());
             warnings.add("AI 추론을 완료하지 못했습니다. 누락된 필드를 직접 입력해주세요.");
@@ -102,8 +106,8 @@ public class ClothesImportService {
         Clothes existing = clothesRepository.findByOriginalUrl(token.canonicalUrl()).orElse(null);
         if (existing != null) return response(persistenceService.linkExisting(user.id(), existing));
 
-        RemoteImage image = remoteImageClient.download(token.imageUrl());
-        String storedImageUrl = storageClient.uploadMusinsaProduct(token.productId(), image);
+        RemoteImage image = remoteImagePort.download(token.imageUrl());
+        String storedImageUrl = imageStoragePort.uploadMusinsaProduct(token.productId(), image);
         try {
             return response(persistenceService.createAndLink(
                     user.id(), request, details, token.canonicalUrl(), storedImageUrl
